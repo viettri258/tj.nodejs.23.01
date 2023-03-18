@@ -10,6 +10,8 @@ const REASONSTATUSCODE = {
     CONFLICT: "Conflict Error",
 };
 
+const { StatusCodes, ReasonPhrases } = require("../utils/httpStatusCode");
+
 // inherit node.js
 class ErrorResponse extends Error {
     constructor(message, status) {
@@ -38,4 +40,13 @@ class BadRequestError extends ErrorResponse {
     }
 }
 
-module.exports = { ConflictRequestError, BadRequestError };
+class AuthFailureError extends ErrorResponse {
+    constructor(
+        message = ReasonPhrases.UNAUTHORIZED,
+        statusCode = StatusCodes.UNAUTHORIZED,
+    ) {
+        super(message, statusCode);
+    }
+}
+
+module.exports = { ConflictRequestError, BadRequestError, AuthFailureError };

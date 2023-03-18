@@ -33,13 +33,14 @@ const apiKey = async (req, res, next) => {
 
 const permission = (permission) => {
     return (req, res, next) => {
+        // console.log(req.objKey);
         if (!req.objKey.permissions) {
             return res.status(403).json({
                 message: "permission denied",
             });
         }
 
-        console.log("permissions:::", req.objKey.permissions);
+        // console.log("permissions:::", req.objKey.permissions);
 
         const validPermission = req.objKey.permissions.includes(permission);
         if (!validPermission) {
