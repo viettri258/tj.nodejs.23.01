@@ -37,6 +37,26 @@ class KeyTokenService {
         }
     };
 
+    static updateKeyToken = async ({ refreshToken, newRefreshToken }) => {
+        try {
+            return await _KeyToken.findOneAndUpdate(
+                {
+                    refreshToken,
+                },
+                {
+                    $set: {
+                        refreshToken: newRefreshToken,
+                    },
+                    $addToSet: {
+                        refreshTokensUsed: refreshToken,
+                    },
+                },
+            );
+        } catch (error) {
+            throw error;
+        }
+    };
+
     static findByUserId = async (userId) => {
         return await _KeyToken
             .findOne({
@@ -47,6 +67,22 @@ class KeyTokenService {
 
     static removeKeyById = async (id) => {
         return await _KeyToken.remove({ _id: id });
+    };
+
+    static findByRefreshTokenUsed = async (refreshToken) => {
+        return await _KeyToken
+            .findOne({ refreshTokensUsed: refreshToken })
+            .lean();
+    };
+
+    static findByRefreshToken = async (refreshToken) => {
+        return await _KeyToken.findOne({ refreshToken }); // Sẽ cập nhật tiếp nên ko dùng lean
+    };
+
+    static deleteKeyByUserId = async (userId) => {
+        return await _KeyToken.deleteMany({
+            user: userId,
+        });
     };
 }
 
